@@ -29,42 +29,42 @@ def preprocess_state(image):
     return x_t.astype(np.uint8)/255.
 
 
-def evaluate(agent, csv_writer,iter_idx, num_episodes, stack_size):
-    avg_score = []
-    iter_record = [iter_idx]
-    for episode in range(num_episodes):
-        state = env.reset()
-        done = False
-        score = 0.
-        crop_pixels=8
+# def evaluate(agent, csv_writer,iter_idx, num_episodes, stack_size):
+#     avg_score = []
+#     iter_record = [iter_idx]
+#     for episode in range(num_episodes):
+#         state = env.reset()
+#         done = False
+#         score = 0.
+#         crop_pixels=8
         
-        # current state & 2,3-previous states 
-        state_frames = deque(maxlen=stack_size)
+#         # current state & 2,3-previous states 
+#         state_frames = deque(maxlen=stack_size)
 
-        step = 0
-        while not done and step < max_steps:
-            _state = preprocess_state(state)
-            state = torch.from_numpy(_state).float()
+#         step = 0
+#         while not done and step < max_steps:
+#             _state = preprocess_state(state)
+#             state = torch.from_numpy(_state).float()
 
-            # if it's the first frame, copy the same state multiple time in the stack
-            if len(state_frames) < stack_size:
-                for i in range(stack_size):
-                    state_frames.append(state)
-            else:
-                state_frames.append(state)
+#             # if it's the first frame, copy the same state multiple time in the stack
+#             if len(state_frames) < stack_size:
+#                 for i in range(stack_size):
+#                     state_frames.append(state)
+#             else:
+#                 state_frames.append(state)
 
-            state_stack = torch.stack(list(state_frames)).unsqueeze(dim=0)
-            action = agent.act(state_stack, epsilon=0.05)
-            next_state, reward, done, info = env.step(action)
+#             state_stack = torch.stack(list(state_frames)).unsqueeze(dim=0)
+#             action = agent.act(state_stack, epsilon=0.05)
+#             next_state, reward, done, info = env.step(action)
             
-            state = next_state
+#             state = next_state
         
-            score += reward
-            step +=1
-        avg_score.append(score)
-    iter_record.extend(avg_score)
-    csv_writer.writerow(iter_record)
-    return  np.mean(avg_score)
+#             score += reward
+#             step +=1
+#         avg_score.append(score)
+#     iter_record.extend(avg_score)
+#     csv_writer.writerow(iter_record)
+#     return  np.mean(avg_score)
 
 def run(experiment_name, num_iterations, learning_rate, buffer_size, batch_size, gamma,epsilon, epsilod_decay, epsilon_min, stack_size, device, is_ddqn, evaluation_rate, evaluation_num_episodes, log_directory, validation_directory):
     scores = []
@@ -137,13 +137,13 @@ def run(experiment_name, num_iterations, learning_rate, buffer_size, batch_size,
                     # evaluate every 1M steps and decay epsilon (based on paper)
                     if agent.num_train_updates % evaluation_rate == 0 and prev_iteration != agent.num_train_updates:
                         epsilon = max( epsilon_min, epsilon*epsilod_decay)
-                        avg_eval_score = evaluate(csv_writer=csv_writer,
-                                                  iter_idx=agent.num_train_updates,
-                                                  agent=agent, 
-                                                  stack_size=stack_size, 
-                                                  num_episodes=evaluation_num_episodes)
-                        tb_writer.add_scalar('Iteration Evaluation Score', avg_eval_score, epoch_plot_count)
-                        epoch_plot_count+=1
+#                         avg_eval_score = evaluate(csv_writer=csv_writer,
+#                                                   iter_idx=agent.num_train_updates,
+#                                                   agent=agent, 
+#                                                   stack_size=stack_size, 
+#                                                   num_episodes=evaluation_num_episodes)
+#                         tb_writer.add_scalar('Iteration Evaluation Score', avg_eval_score, epoch_plot_count)
+#                         epoch_plot_count+=1
                         prev_iteration = agent.num_train_updates
 
                 if agent.num_train_updates > num_iterations:
