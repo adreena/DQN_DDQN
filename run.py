@@ -15,7 +15,7 @@ from config_reader import ConfigReader
 
 print('Torch Version:',torch.__version__)
 
-from dqn_ddqn_agent import Agent
+from agent import Agent
 
 
 def preprocess_state(image):
